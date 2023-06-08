@@ -1,57 +1,36 @@
 # Level Goal
-The password for the next level is stored in the only human-readable file in the inhere directory. Tip: if your terminal is messed up, try the “reset” command.
+The password for the next level is stored in a file somewhere under the inhere directory and has all of the following properties:
+- human-readable
+- 1033 bytes in size
+- not executable
+
+A brief view of what's in our system:
+```shell
+bandit5@bandit:~/inhere$ ls
+maybehere00  maybehere03  maybehere06  maybehere09  maybehere12  maybehere15  maybehere18
+maybehere01  maybehere04  maybehere07  maybehere10  maybehere13  maybehere16  maybehere19
+maybehere02  maybehere05  maybehere08  maybehere11  maybehere14  maybehere17
+bandit5@bandit:~/inhere$ cd maybehere00
+bandit5@bandit:~/inhere/maybehere00$ ls -al
+total 72
+drwxr-x---  2 root bandit5 4096 Apr 23 18:04 .
+drwxr-x--- 22 root bandit5 4096 Apr 23 18:04 ..
+-rwxr-x---  1 root bandit5 1039 Apr 23 18:04 -file1
+-rwxr-x---  1 root bandit5  551 Apr 23 18:04 .file1
+-rw-r-----  1 root bandit5 9388 Apr 23 18:04 -file2
+-rw-r-----  1 root bandit5 7836 Apr 23 18:04 .file2
+-rwxr-x---  1 root bandit5 7378 Apr 23 18:04 -file3
+-rwxr-x---  1 root bandit5 4802 Apr 23 18:04 .file3
+-rwxr-x---  1 root bandit5 6118 Apr 23 18:04 spaces file1
+-rw-r-----  1 root bandit5 6850 Apr 23 18:04 spaces file2
+-rwxr-x---  1 root bandit5 1915 Apr 23 18:04 spaces file3
+```
 
 # Solution
-I first check the size of the files:
 ```shell
-bandit4@bandit:~/inhere$ du ./-file0*
-4	./-file00
-4	./-file01
-4	./-file02
-4	./-file03
-4	./-file04
-4	./-file05
-4	./-file06
-4	./-file07
-4	./-file08
-4	./-file09
+bandit5@bandit:~/inhere$ find . -size 1033c ! -executable
+./maybehere07/.file2
 ```
-but with no found.
+The `c` stands for bytes, which is the standard unit of measurement for file sizes in most file systems and operating systems.
 
-Then I come up with a loop idea:
-```shell
-bandit4@bandit:~/inhere$ for file in ./-file*; do file "$file"; done
-./-file00: data
-./-file01: data
-./-file02: data
-./-file03: data
-./-file04: data
-./-file05: data
-./-file06: data
-./-file07: ASCII text
-./-file08: data
-./-file09: Non-ISO extended-ASCII text, with no line terminators
-```
-
-Well maybe I can simply do:
-```shell
-bandit4@bandit:~/inhere$ file ./-file*
-./-file00: data
-./-file01: data
-./-file02: data
-./-file03: data
-./-file04: data
-./-file05: data
-./-file06: data
-./-file07: ASCII text
-./-file08: data
-./-file09: Non-ISO extended-ASCII text, with no line terminators
-```
-
-And finally we got it:
-```shell
-bandit4@bandit:~/inhere$ cat ./-file07
-lrIWWI6bB37kxfiCQZqUdOIYfr6eEeqR
-```
-
-- passwd: `lrIWWI6bB37kxfiCQZqUdOIYfr6eEeqR`
+- passwd: `P4L4vucdmLnm8I7Vl7jG1ApGSfjYKqJU`
